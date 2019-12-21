@@ -17,29 +17,49 @@ import {
 interface Props {
   axis: "l" | "c" | "h";
   sequence: RGB[];
+  selectedIndex: number;
 }
 
-export default function TunnelGraph({ axis, sequence }: Props) {
+export default function TunnelGraph({ axis, sequence, selectedIndex }: Props) {
   const colorSequence = useMemo(
     () => sequence.map(rgb => ({ rgb, lch: rgbToLCH(rgb) })),
     [sequence]
   );
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: `repeat(${sequence.length}, 1fr)`,
-        gridTemplateRows: `20px 200px`
-      }}
-    >
-      {colorSequence.map(({ lch }, index) => (
-        <div key={index}>{lch[axis].toFixed(2)}</div>
-      ))}
+    <div style={{ position: "relative" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${sequence.length}, 1fr)`,
+          gridTemplateRows: `30px 200px`
+        }}
+      >
+        {colorSequence.map(({ rgb, lch }, index) => (
+          <div
+            key={index}
+            style={{
+              borderTop: `3px solid ${rgbToHex(rgb)}`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: index === selectedIndex ? "gray" : "white"
+            }}
+          >
+            {lch[axis].toFixed(2)}
+          </div>
+        ))}
 
-      {colorSequence.map(({ rgb, lch }, index) => (
-        <TunnelStack key={index} rgb={rgb} lch={lch} axis={axis} />
-      ))}
+        {colorSequence.map(({ rgb, lch }, index) => (
+          <TunnelStack
+            key={index}
+            rgb={rgb}
+            lch={lch}
+            axis={axis}
+            selected={index === selectedIndex}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -47,11 +67,13 @@ export default function TunnelGraph({ axis, sequence }: Props) {
 function TunnelStack({
   rgb,
   lch,
-  axis
+  axis,
+  selected
 }: {
   rgb: RGB;
   lch: LCH;
   axis: "l" | "c" | "h";
+  selected: boolean;
 }) {
   const SWEEP_STEPS = 100;
 
@@ -116,14 +138,16 @@ function TunnelStack({
         position: "relative"
       }}
     >
-      {boxes.map(({ bottom, height }) => (
+      {boxes.map(({ bottom, height }, index) => (
         <div
+          key={index}
           style={{
             position: "absolute",
             width: "100%",
             bottom: `${bottom * 100}%`,
             height: `${height * 100}%`,
-            backgroundColor: "white"
+            transition: "bottom 0.5s ease 0s, height 0.5s ease 0s",
+            backgroundColor: selected ? "gray" : "white"
           }}
         />
       ))}

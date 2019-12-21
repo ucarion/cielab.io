@@ -112,7 +112,13 @@ export default function App() {
               sequence.map((color, shade) => (
                 <div
                   key={`${hue}.${shade}`}
-                  style={{ backgroundColor: rgbToHex(color) }}
+                  style={{
+                    backgroundColor: rgbToHex(color),
+                    border:
+                      hue === selectedColor.hue && shade === selectedColor.shade
+                        ? "4px solid white"
+                        : ""
+                  }}
                   onClick={() => setSelectedColor({ hue, shade })}
                 >
                   {rgbToHex(color)}
@@ -139,12 +145,36 @@ export default function App() {
             gridRowGap: "16px"
           }}
         >
-          <TunnelGraph axis="l" sequence={hueSequence} />
-          <TunnelGraph axis="l" sequence={shadeSequence} />
-          <TunnelGraph axis="c" sequence={hueSequence} />
-          <TunnelGraph axis="c" sequence={shadeSequence} />
-          <TunnelGraph axis="h" sequence={hueSequence} />
-          <TunnelGraph axis="h" sequence={shadeSequence} />
+          <TunnelGraph
+            axis="l"
+            sequence={hueSequence}
+            selectedIndex={selectedColor.shade}
+          />
+          <TunnelGraph
+            axis="l"
+            sequence={shadeSequence}
+            selectedIndex={selectedColor.hue}
+          />
+          <TunnelGraph
+            axis="c"
+            sequence={hueSequence}
+            selectedIndex={selectedColor.shade}
+          />
+          <TunnelGraph
+            axis="c"
+            sequence={shadeSequence}
+            selectedIndex={selectedColor.hue}
+          />
+          <TunnelGraph
+            axis="h"
+            sequence={hueSequence}
+            selectedIndex={selectedColor.shade}
+          />
+          <TunnelGraph
+            axis="h"
+            sequence={shadeSequence}
+            selectedIndex={selectedColor.hue}
+          />
         </div>
       </div>
     </div>
