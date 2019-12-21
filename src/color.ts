@@ -43,6 +43,24 @@ export function lchToRGB(lch: LCH): RGB {
   return xyzToRGB(labToXYZ(lchToLAB(lch)));
 }
 
+export function hexToRGB(hex: string): RGB {
+  return {
+    r: parseInt(hex.substring(1, 3), 16) / 255,
+    g: parseInt(hex.substring(3, 5), 16) / 255,
+    b: parseInt(hex.substring(5, 7), 16) / 255
+  };
+}
+
+export function rgbToHex({ r, g, b }: RGB): string {
+  return `#${channelToHex(r)}${channelToHex(g)}${channelToHex(b)}`;
+}
+
+function channelToHex(t: number): string {
+  return Math.round(t * 255)
+    .toString(16)
+    .padStart(2, "0");
+}
+
 function rgbToXYZ({ r, g, b }: RGB): XYZ {
   return {
     x:
