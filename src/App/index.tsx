@@ -1,28 +1,38 @@
-import React, { useState, ChangeEvent, useEffect } from "react";
-import { RGB, LCH, rgbToLCH, lchToRGB } from "../color";
+import React, { useState, ChangeEvent, useMemo } from "react";
+import {
+  RGB,
+  LCH,
+  rgbToLCH,
+  lchToRGB,
+  wcagContrastRatio,
+  RGB_BLACK,
+  RGB_WHITE
+} from "../color";
 import TunnelGraph from "./TunnelGraph";
 import { Palette } from "./types";
 import ColorEditor from "./ColorEditor";
 import "./index.css";
 import PaletteDisplay from "./PaletteDisplay";
+import { PRESETS } from "./presets";
 
 const DEFAULT_COLOR = { r: 0.5, g: 0.5, b: 0.5 };
 
 export default function App() {
-  const [importedPalette, setImportedPalette] = useState(
-    `{"hues":["Red","Green","Blue"],"shades":["50","100","200","300","400"],"colors":[[{"r":0.9783901377008425,"g":0.35953939267575336,"b":0.22051826554888315},{"r":0.8233185730271249,"g":0.2777279774920036,"b":0.19905678018195755},{"r":0.7078511912624108,"g":0.15041437702558877,"b":0.10232903375963262},{"r":0.5700142219638018,"g":0.005319274491069229,"b":0.15647091658177512},{"r":0.3639275956504139,"g":0.09375304535178947,"b":0.03946903908168702}],[{"r":0.2681739379482392,"g":0.633060141301358,"b":0.45166600417023545},{"r":0.24677377897388075,"g":0.5232733327900222,"b":0.2832511485305114},{"r":0.18755012896797302,"g":0.41700510772051375,"b":0.20476650384447775},{"r":0.0479993069426722,"g":0.32193260892655484,"b":0.1280168534149834},{"r":0.012427425239623126,"g":0.22259530871496774,"b":0.09421932715330802}],[{"r":0.3749379277908753,"g":0.5899869183679388,"b":0.7438739393947659},{"r":0.280582845758216,"g":0.48740044770490726,"b":0.6312646929024517},{"r":0.05358682011851349,"g":0.3963841870194739,"b":0.5417193115002815},{"r":0.13004332959275933,"g":0.28585664026396485,"b":0.4373745530576504},{"r":0.057418371802411265,"g":0.1993244016051749,"b":0.3026093462932969}]]}`
-  );
-
-  const [{ hues, shades, colors }, setPalette] = useState<Palette>({
-    hues: ["foo", "bar"],
-    shades: ["baz", "quux"],
-    colors: [
-      [DEFAULT_COLOR, DEFAULT_COLOR],
-      [DEFAULT_COLOR, DEFAULT_COLOR]
-    ]
+  const [{ hues, shades, colors }, setPalette] = useState(PRESETS[0]);
+  const [selectedColor, setSelectedColor] = useState({
+    hue: Math.round(PRESETS[0].hues.length / 2),
+    shade: Math.round(PRESETS[0].shades.length / 2)
   });
 
-  const [selectedColor, setSelectedColor] = useState({ hue: 0, shade: 0 });
+  const handlePresetChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const preset = PRESETS[event.target.selectedIndex];
+
+    setSelectedColor({
+      hue: Math.round(preset.hues.length / 2),
+      shade: Math.round(preset.shades.length / 2)
+    });
+    setPalette(preset);
+  };
 
   const channelToHex = (t: number): string => {
     return Math.round(t * 255)
@@ -80,129 +90,251 @@ export default function App() {
     updateSelectedColor(hexToRGB(event.target.value));
   };
 
+  const triggerDownload = (fileName: string, blob: Blob) => {
+    const element = document.createElement("a");
+    element.href = URL.createObjectURL(blob);
+    element.download = fileName;
+    document.body.appendChild(element);
+    element.click();
+  };
+
+  const handleExportJSON = () => {
+    const result: { [name: string]: string } = {};
+    for (const [hueIndex, hue] of hues.entries()) {
+      for (const [shadeIndex, shade] of shades.entries()) {
+        result[`${hue}${shade}`] = rgbToHex(colors[hueIndex][shadeIndex]);
+      }
+    }
+
+    triggerDownload(
+      "palette.json",
+      new Blob([JSON.stringify(result, null, 2)], { type: "application/json" })
+    );
+  };
+
   const hueSequence = colors[selectedColor.hue];
   const shadeSequence = colors.map(sequence => sequence[selectedColor.shade]);
 
   const selectedColorRGB = colors[selectedColor.hue][selectedColor.shade];
   const selectedColorLCH = rgbToLCH(selectedColorRGB);
 
+  const contrastRatioWhite = useMemo(
+    () => wcagContrastRatio(selectedColorRGB, RGB_WHITE),
+    [selectedColorRGB]
+  );
+  const contrastRatioBlack = useMemo(
+    () => wcagContrastRatio(selectedColorRGB, RGB_BLACK),
+    [selectedColorRGB]
+  );
+
+  const isHeaderTextWhite = contrastRatioWhite > contrastRatioBlack;
+
   return (
     <div>
-      <div>
-        <button onClick={() => alert(JSON.stringify({ hues, shades, colors }))}>
-          Export State
-        </button>
+      <div
+        style={{
+          height: "56px",
+          backgroundColor: rgbToHex(selectedColorRGB),
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingLeft: "32px",
+          paddingRight: "32px",
+          boxSizing: "border-box",
+          color: isHeaderTextWhite ? "white" : "black",
+          transition: "background-color 0.5s, color 0.5s"
+        }}
+      >
+        <span style={{ display: "flex", alignItems: "center" }}>
+          <a
+            style={{
+              color: isHeaderTextWhite ? "white" : "black",
+              transition: "color 0.5s",
+              display: "flex",
+              alignItems: "center"
+            }}
+            href="/"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+                fill={isHeaderTextWhite ? "white" : "black"}
+              />
+              <path d="M0 0h24v24H0z" fill="none" />
+            </svg>
+          </a>
+          <a
+            style={{
+              color: isHeaderTextWhite ? "white" : "black",
+              transition: "color 0.5s",
+              display: "flex",
+              alignItems: "center"
+            }}
+            href="/"
+          >
+            <span style={{ marginLeft: "8px" }}>cielab.io</span>
+          </a>
+          <span style={{ marginLeft: "32px" }}>Load preset</span>
+          <select style={{ marginLeft: "8px" }} onChange={handlePresetChange}>
+            <option>Google (Material UI)</option>
+            <option>IBM (Carbon)</option>
+            <option>US Digital Service (USWDS)</option>
+            <option>Ant Financial (Ant Design)</option>
+            <option>Segment (Evergreen)</option>
+            <option>GitHub (Primer)</option>
+          </select>
+        </span>
 
-        <input
-          onChange={event => setImportedPalette(event.target.value)}
-          value={importedPalette}
-        />
-        <button onClick={() => setPalette(JSON.parse(importedPalette))}>
-          Import State
-        </button>
+        <span>
+          <button>Export as Figma Style</button>
+          <button onClick={handleExportJSON}>
+            Export as JSON / JavaScript
+          </button>
+        </span>
       </div>
 
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "500px auto",
-          gridColumnGap: "16px"
-        }}
+        style={{ paddingTop: "8px", paddingLeft: "8px", paddingRight: "8px" }}
       >
-        <div>
-          <PaletteDisplay
-            palette={{ hues, shades, colors }}
-            selectedHue={selectedColor.hue}
-            selectedShade={selectedColor.shade}
-            onColorSelect={setSelectedColor}
-          />
-
-          {/* <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: `repeat(${shades.length}, 1fr)`,
-              gridTemplateRows: `repeat(${hues.length}, 50px)`
-            }}
-          >
-            {colors.map((sequence, hue) =>
-              sequence.map((color, shade) => (
-                <div
-                  key={`${hue}.${shade}`}
-                  style={{
-                    backgroundColor: rgbToHex(color),
-                    border:
-                      hue === selectedColor.hue && shade === selectedColor.shade
-                        ? "4px solid white"
-                        : ""
-                  }}
-                  onClick={() => setSelectedColor({ hue, shade })}
-                >
-                  {rgbToHex(color)}
-                </div>
-              ))
-            )}
-          </div> */}
-
-          <input
-            type="color"
-            value={rgbToHex(colors[selectedColor.hue][selectedColor.shade])}
-            onChange={handleColorChange}
-          />
-
-          <button onClick={handleAddHue}>Add Hue</button>
-          <button onClick={handleAddShade}>Add Shade</button>
-
-          <div>
-            <ColorEditor
-              rgb={selectedColorRGB}
-              lch={selectedColorLCH}
-              hue={hues[selectedColor.hue]}
-              shade={shades[selectedColor.shade]}
-              onUpdate={rgb => updateSelectedColor(rgb)}
-            />
-          </div>
-        </div>
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: `repeat(2, 1fr)`,
-            gridTemplateRows: `30px repeat(3, 1fr)`,
-            gridColumnGap: "16px",
-            gridRowGap: "16px"
+            gridTemplateColumns: "500px auto",
+            gridColumnGap: "16px"
           }}
         >
-          <div>{hues[selectedColor.hue]}</div>
-          <div>{shades[selectedColor.shade]}</div>
-          <TunnelGraph
-            axis="l"
-            sequence={hueSequence}
-            selectedIndex={selectedColor.shade}
-          />
-          <TunnelGraph
-            axis="l"
-            sequence={shadeSequence}
-            selectedIndex={selectedColor.hue}
-          />
-          <TunnelGraph
-            axis="c"
-            sequence={hueSequence}
-            selectedIndex={selectedColor.shade}
-          />
-          <TunnelGraph
-            axis="c"
-            sequence={shadeSequence}
-            selectedIndex={selectedColor.hue}
-          />
-          <TunnelGraph
-            axis="h"
-            sequence={hueSequence}
-            selectedIndex={selectedColor.shade}
-          />
-          <TunnelGraph
-            axis="h"
-            sequence={shadeSequence}
-            selectedIndex={selectedColor.hue}
-          />
+          <div>
+            <PaletteDisplay
+              palette={{ hues, shades, colors }}
+              selectedHue={selectedColor.hue}
+              selectedShade={selectedColor.shade}
+              onColorSelect={setSelectedColor}
+            />
+
+            <input
+              type="color"
+              value={rgbToHex(colors[selectedColor.hue][selectedColor.shade])}
+              onChange={handleColorChange}
+            />
+
+            <button onClick={handleAddHue}>Add Hue</button>
+            <button onClick={handleAddShade}>Add Shade</button>
+
+            <div>
+              <ColorEditor
+                rgb={selectedColorRGB}
+                lch={selectedColorLCH}
+                hue={hues[selectedColor.hue]}
+                shade={shades[selectedColor.shade]}
+                onUpdate={rgb => updateSelectedColor(rgb)}
+              />
+            </div>
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(2, 1fr)`,
+              gridTemplateRows: `30px repeat(3, 1fr)`,
+              gridColumnGap: "16px",
+              gridRowGap: "16px"
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}
+            >
+              <div>{hues[selectedColor.hue]}</div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `repeat(${shades.length}, 48px)`,
+                  gridTemplateRows: "32px"
+                }}
+              >
+                {colors[selectedColor.hue].map((color, shadeIndex) => (
+                  <div
+                    key={shadeIndex}
+                    style={{
+                      backgroundColor: rgbToHex(color),
+                      border:
+                        selectedColor.shade === shadeIndex
+                          ? "4px solid white"
+                          : ""
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}
+            >
+              <div>{shades[selectedColor.shade]}</div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `repeat(${hues.length}, 48px)`,
+                  gridTemplateRows: "32px"
+                }}
+              >
+                {colors.map((shadeSequence, hueIndex) => (
+                  <div
+                    key={hueIndex}
+                    style={{
+                      backgroundColor: rgbToHex(
+                        shadeSequence[selectedColor.shade]
+                      ),
+                      border:
+                        selectedColor.hue === hueIndex ? "4px solid white" : ""
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+            <TunnelGraph
+              axis="l"
+              sequence={hueSequence}
+              selectedIndex={selectedColor.shade}
+            />
+            <TunnelGraph
+              axis="l"
+              sequence={shadeSequence}
+              selectedIndex={selectedColor.hue}
+            />
+            <TunnelGraph
+              axis="c"
+              sequence={hueSequence}
+              selectedIndex={selectedColor.shade}
+            />
+            <TunnelGraph
+              axis="c"
+              sequence={shadeSequence}
+              selectedIndex={selectedColor.hue}
+            />
+            <TunnelGraph
+              axis="h"
+              sequence={hueSequence}
+              selectedIndex={selectedColor.shade}
+            />
+            <TunnelGraph
+              axis="h"
+              sequence={shadeSequence}
+              selectedIndex={selectedColor.hue}
+            />
+          </div>
         </div>
       </div>
     </div>

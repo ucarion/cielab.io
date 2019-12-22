@@ -43,7 +43,7 @@ export default function TunnelGraph({ axis, sequence, selectedIndex }: Props) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: index === selectedIndex ? "gray" : "white"
+              backgroundColor: index === selectedIndex ? "#eee" : "white"
             }}
           >
             {lch[axis].toFixed(2)}
@@ -147,7 +147,7 @@ function TunnelStack({
             bottom: `${bottom * 100}%`,
             height: `${height * 100}%`,
             transition: "bottom 0.5s ease 0s, height 0.5s ease 0s",
-            backgroundColor: selected ? "gray" : "white"
+            backgroundColor: selected ? "#eee" : "white"
           }}
         />
       ))}
