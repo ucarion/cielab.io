@@ -1,5 +1,5 @@
-import React, { useState, ChangeEvent } from "react";
-import { RGB } from "../color";
+import React, { useState, ChangeEvent, useEffect } from "react";
+import { RGB, LCH, rgbToLCH, lchToRGB } from "../color";
 import TunnelGraph from "./TunnelGraph";
 import { Palette } from "./types";
 
@@ -55,8 +55,7 @@ export default function App() {
     });
   };
 
-  const handleColorChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const color = hexToRGB(event.target.value);
+  const updateSelectedColor = (color: RGB) => {
     const { hue, shade } = selectedColor;
 
     setPalette({
@@ -74,8 +73,15 @@ export default function App() {
     });
   };
 
+  const handleColorChange = (event: ChangeEvent<HTMLInputElement>) => {
+    updateSelectedColor(hexToRGB(event.target.value));
+  };
+
   const hueSequence = colors[selectedColor.hue];
   const shadeSequence = colors.map(sequence => sequence[selectedColor.shade]);
+
+  const selectedColorRGB = colors[selectedColor.hue][selectedColor.shade];
+  const selectedColorLCH = rgbToLCH(selectedColorRGB);
 
   return (
     <div>
@@ -135,6 +141,36 @@ export default function App() {
 
           <button onClick={handleAddHue}>Add Hue</button>
           <button onClick={handleAddShade}>Add Shade</button>
+
+          <div>
+            <code>{rgbToHex(selectedColorRGB)}</code>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: `repeat(3, 1fr)`,
+                gridTemplateRows: `50px 50px`
+              }}
+            >
+              <div>
+                <LCHEditor
+                  lch={selectedColorLCH}
+                  axis="l"
+                  onUpdate={rgb => updateSelectedColor(rgb)}
+                />
+              </div>
+              <div>
+                <input readOnly value={selectedColorLCH.c} />
+              </div>
+              <div>
+                <input readOnly value={selectedColorLCH.h} />
+              </div>
+
+              <div>l</div>
+              <div>c</div>
+              <div>h</div>
+            </div>
+          </div>
         </div>
         <div
           style={{
@@ -178,5 +214,29 @@ export default function App() {
         </div>
       </div>
     </div>
+  );
+}
+
+function LCHEditor(props: {
+  lch: LCH;
+  axis: "l" | "c" | "h";
+  onUpdate: (rgb: RGB) => void;
+}) {
+  return (
+    <input
+      onKeyUp={event => {
+        if (event.key === "ArrowUp") {
+          props.onUpdate(
+            lchToRGB({ ...props.lch, [props.axis]: props.lch[props.axis] + 1 })
+          );
+        } else if (event.key === "ArrowDown") {
+          props.onUpdate(
+            lchToRGB({ ...props.lch, [props.axis]: props.lch[props.axis] - 1 })
+          );
+        }
+      }}
+      readOnly
+      value={props.lch[props.axis]}
+    />
   );
 }

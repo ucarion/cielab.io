@@ -55,7 +55,7 @@ export function rgbToHex({ r, g, b }: RGB): string {
   return `#${channelToHex(r)}${channelToHex(g)}${channelToHex(b)}`;
 }
 
-function channelToHex(t: number): string {
+export function channelToHex(t: number): string {
   return Math.round(t * 255)
     .toString(16)
     .padStart(2, "0");
