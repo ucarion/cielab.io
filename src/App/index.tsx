@@ -4,6 +4,7 @@ import TunnelGraph from "./TunnelGraph";
 import { Palette } from "./types";
 import ColorEditor from "./ColorEditor";
 import "./index.css";
+import PaletteDisplay from "./PaletteDisplay";
 
 const DEFAULT_COLOR = { r: 0.5, g: 0.5, b: 0.5 };
 
@@ -109,7 +110,14 @@ export default function App() {
         }}
       >
         <div>
-          <div
+          <PaletteDisplay
+            palette={{ hues, shades, colors }}
+            selectedHue={selectedColor.hue}
+            selectedShade={selectedColor.shade}
+            onColorSelect={setSelectedColor}
+          />
+
+          {/* <div
             style={{
               display: "grid",
               gridTemplateColumns: `repeat(${shades.length}, 1fr)`,
@@ -133,7 +141,7 @@ export default function App() {
                 </div>
               ))
             )}
-          </div>
+          </div> */}
 
           <input
             type="color"
@@ -158,11 +166,13 @@ export default function App() {
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(2, 1fr)`,
-            gridTemplateRows: `repeat(3, 1fr)`,
+            gridTemplateRows: `30px repeat(3, 1fr)`,
             gridColumnGap: "16px",
             gridRowGap: "16px"
           }}
         >
+          <div>{hues[selectedColor.hue]}</div>
+          <div>{shades[selectedColor.shade]}</div>
           <TunnelGraph
             axis="l"
             sequence={hueSequence}
@@ -196,29 +206,5 @@ export default function App() {
         </div>
       </div>
     </div>
-  );
-}
-
-function LCHEditor(props: {
-  lch: LCH;
-  axis: "l" | "c" | "h";
-  onUpdate: (rgb: RGB) => void;
-}) {
-  return (
-    <input
-      onKeyUp={event => {
-        if (event.key === "ArrowUp") {
-          props.onUpdate(
-            lchToRGB({ ...props.lch, [props.axis]: props.lch[props.axis] + 1 })
-          );
-        } else if (event.key === "ArrowDown") {
-          props.onUpdate(
-            lchToRGB({ ...props.lch, [props.axis]: props.lch[props.axis] - 1 })
-          );
-        }
-      }}
-      readOnly
-      value={props.lch[props.axis]}
-    />
   );
 }
