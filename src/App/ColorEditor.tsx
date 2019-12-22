@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  KeyboardEvent,
+  useEffect,
+  useMemo
+} from "react";
 import {
   RGB,
   LCH,
@@ -6,7 +12,10 @@ import {
   MAX_SRGB_LUMINANCE,
   hexToRGB,
   rgbIsDisplayable,
-  lchToRGB
+  lchToRGB,
+  wcagContrastRatio,
+  RGB_WHITE,
+  RGB_BLACK
 } from "../color";
 
 interface Props {
@@ -32,6 +41,15 @@ export default function ColorEditor({
   const [isCInputValid, setCInputValid] = useState(true);
   const [hInput, setHInput] = useState(h.toFixed(2));
   const [isHInputValid, setHInputValid] = useState(true);
+
+  const contrastRatioWhite = useMemo(() => wcagContrastRatio(rgb, RGB_WHITE), [
+    rgb
+  ]);
+  const contrastRatioBlack = useMemo(() => wcagContrastRatio(rgb, RGB_BLACK), [
+    rgb
+  ]);
+
+  const isTextWhite = contrastRatioWhite > contrastRatioBlack;
 
   useEffect(() => {
     setRGBInput(rgbToHex(rgb));
@@ -130,10 +148,13 @@ export default function ColorEditor({
           display: "grid",
           justifyContent: "center",
           alignItems: "center",
-          color: l > MAX_SRGB_LUMINANCE / 2 ? "black" : "white"
+          color: isTextWhite ? "white" : "black"
         }}
       >
-        {hue} {shade}
+        {hue} {shade}{" "}
+        {isTextWhite
+          ? contrastRatioWhite.toFixed(2)
+          : contrastRatioBlack.toFixed(2)}
       </div>
       <div
         style={{

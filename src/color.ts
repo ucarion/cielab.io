@@ -31,6 +31,9 @@ export const MAX_SRGB_CHROMA = 134;
 export const MIN_SRGB_HUE = -Math.PI;
 export const MAX_SRGB_HUE = Math.PI;
 
+export const RGB_WHITE = { r: 1, g: 1, b: 1 };
+export const RGB_BLACK = { r: 0, g: 0, b: 0 };
+
 export function rgbIsDisplayable({ r, g, b }: RGB): boolean {
   return 0 <= r && r <= 1 && 0 <= g && g <= 1 && 0 <= b && b <= 1;
 }
@@ -166,4 +169,27 @@ function lchToLAB({ l, c, h }: LCH): LAB {
     a: c * Math.cos(h),
     b: c * Math.sin(h)
   };
+}
+
+export function wcagContrastRatio(x: RGB, y: RGB): number {
+  const [lX, lY] = [wcagLuminance(x), wcagLuminance(y)];
+  const [l1, l2] = [Math.max(lX, lY), Math.min(lX, lY)];
+
+  return (l1 + 0.05) / (l2 + 0.05);
+}
+
+function wcagLuminance({ r, g, b }: RGB): number {
+  return (
+    0.2126 * wcagGammaInv(r) +
+    0.7152 * wcagGammaInv(g) +
+    0.0722 * wcagGammaInv(b)
+  );
+}
+
+function wcagGammaInv(t: number): number {
+  if (t < 0.03928) {
+    return t / 12.92;
+  } else {
+    return Math.pow((t + 0.055) / 1.055, 2.4);
+  }
 }
