@@ -11,7 +11,10 @@ import {
   rgbToLCH,
   LCH,
   RGB,
-  rgbToHex
+  rgbToHex,
+  wcagContrastRatio,
+  RGB_BLACK,
+  RGB_WHITE
 } from "../color";
 
 interface Props {
@@ -75,7 +78,7 @@ function TunnelStack({
   axis: "l" | "c" | "h";
   selected: boolean;
 }) {
-  const SWEEP_STEPS = 100;
+  const SWEEP_STEPS = 256;
 
   const boxes = useMemo(() => {
     const { [axis]: _, ...rest } = lch;
@@ -134,7 +137,7 @@ function TunnelStack({
   return (
     <div
       style={{
-        backgroundColor: "#333333",
+        backgroundColor: rgbToHex(rgb),
         position: "relative"
       }}
     >
@@ -147,7 +150,10 @@ function TunnelStack({
             bottom: `${bottom * 100}%`,
             height: `${height * 100}%`,
             transition: "bottom 0.5s ease 0s, height 0.5s ease 0s",
-            backgroundColor: selected ? "#eee" : "white"
+            backgroundColor: selected ? "#eee" : "white",
+            borderTop: "1px solid black",
+            borderBottom: "1px solid black",
+            boxSizing: "border-box"
           }}
         />
       ))}

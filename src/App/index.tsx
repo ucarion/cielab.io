@@ -252,27 +252,6 @@ export default function App() {
               }}
             >
               <div>{hues[selectedColor.hue]}</div>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: `repeat(${shades.length}, 48px)`,
-                  gridTemplateRows: "32px"
-                }}
-              >
-                {colors[selectedColor.hue].map((color, shadeIndex) => (
-                  <div
-                    key={shadeIndex}
-                    style={{
-                      backgroundColor: rgbToHex(color),
-                      border:
-                        selectedColor.shade === shadeIndex
-                          ? "4px solid white"
-                          : ""
-                    }}
-                  />
-                ))}
-              </div>
             </div>
             <div
               style={{
@@ -282,27 +261,6 @@ export default function App() {
               }}
             >
               <div>{shades[selectedColor.shade]}</div>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: `repeat(${hues.length}, 48px)`,
-                  gridTemplateRows: "32px"
-                }}
-              >
-                {colors.map((shadeSequence, hueIndex) => (
-                  <div
-                    key={hueIndex}
-                    style={{
-                      backgroundColor: rgbToHex(
-                        shadeSequence[selectedColor.shade]
-                      ),
-                      border:
-                        selectedColor.hue === hueIndex ? "4px solid white" : ""
-                    }}
-                  />
-                ))}
-              </div>
             </div>
             <TunnelGraph
               axis="l"

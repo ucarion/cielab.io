@@ -466,77 +466,178 @@ export const PRESETS: Palette[] = [
     ]
   },
   {
-    hues: ["Red", "Green", "Blue"],
-    shades: ["50", "100", "200", "300", "400"],
+    hues: [
+      "Red",
+      "Volcano",
+      "Orange",
+      "Gold",
+      "Yellow",
+      "Lime",
+      "Green",
+      "Cyan",
+      "Blue",
+      "GeekBlue",
+      "Purple",
+      "Magenta",
+      "Gray"
+    ],
+    shades: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
     colors: [
       [
-        {
-          r: 0.9783901377008425,
-          g: 0.35953939267575336,
-          b: 0.22051826554888315
-        },
-        {
-          r: 0.8233185730271249,
-          g: 0.2777279774920036,
-          b: 0.19905678018195755
-        },
-        {
-          r: 0.7078511912624108,
-          g: 0.15041437702558877,
-          b: 0.10232903375963262
-        },
-        {
-          r: 0.5700142219638018,
-          g: 0.005319274491069229,
-          b: 0.15647091658177512
-        },
-        {
-          r: 0.3639275956504139,
-          g: 0.09375304535178947,
-          b: 0.03946903908168702
-        }
+        hexToRGB("#fff1f0"),
+        hexToRGB("#ffccc7"),
+        hexToRGB("#ffa39e"),
+        hexToRGB("#ff7875"),
+        hexToRGB("#ff4d4f"),
+        hexToRGB("#f5222d"),
+        hexToRGB("#cf1322"),
+        hexToRGB("#a8071a"),
+        hexToRGB("#820014"),
+        hexToRGB("#5c0011")
       ],
       [
-        { r: 0.2681739379482392, g: 0.633060141301358, b: 0.45166600417023545 },
-        {
-          r: 0.24677377897388075,
-          g: 0.5232733327900222,
-          b: 0.2832511485305114
-        },
-        {
-          r: 0.18755012896797302,
-          g: 0.41700510772051375,
-          b: 0.20476650384447775
-        },
-        {
-          r: 0.0479993069426722,
-          g: 0.32193260892655484,
-          b: 0.1280168534149834
-        },
-        {
-          r: 0.012427425239623126,
-          g: 0.22259530871496774,
-          b: 0.09421932715330802
-        }
+        hexToRGB("#fff2e8"),
+        hexToRGB("#ffd8bf"),
+        hexToRGB("#ffbb96"),
+        hexToRGB("#ff9c6e"),
+        hexToRGB("#ff7a45"),
+        hexToRGB("#fa541c"),
+        hexToRGB("#d4380d"),
+        hexToRGB("#ad2102"),
+        hexToRGB("#871400"),
+        hexToRGB("#610b00")
       ],
       [
-        { r: 0.3749379277908753, g: 0.5899869183679388, b: 0.7438739393947659 },
-        { r: 0.280582845758216, g: 0.48740044770490726, b: 0.6312646929024517 },
-        {
-          r: 0.05358682011851349,
-          g: 0.3963841870194739,
-          b: 0.5417193115002815
-        },
-        {
-          r: 0.13004332959275933,
-          g: 0.28585664026396485,
-          b: 0.4373745530576504
-        },
-        {
-          r: 0.057418371802411265,
-          g: 0.1993244016051749,
-          b: 0.3026093462932969
-        }
+        hexToRGB("#fff7e6"),
+        hexToRGB("#ffe7ba"),
+        hexToRGB("#ffd591"),
+        hexToRGB("#ffc069"),
+        hexToRGB("#ffa940"),
+        hexToRGB("#fa8c16"),
+        hexToRGB("#d46b08"),
+        hexToRGB("#ad4e00"),
+        hexToRGB("#873800"),
+        hexToRGB("#612500")
+      ],
+      [
+        hexToRGB("#fffbe6"),
+        hexToRGB("#fff1b8"),
+        hexToRGB("#ffe58f"),
+        hexToRGB("#ffd666"),
+        hexToRGB("#ffc53d"),
+        hexToRGB("#faad14"),
+        hexToRGB("#d48806"),
+        hexToRGB("#ad6800"),
+        hexToRGB("#874d00"),
+        hexToRGB("#613400")
+      ],
+      [
+        hexToRGB("#feffe6"),
+        hexToRGB("#ffffb8"),
+        hexToRGB("#fffb8f"),
+        hexToRGB("#fff566"),
+        hexToRGB("#ffec3d"),
+        hexToRGB("#fadb14"),
+        hexToRGB("#d4b106"),
+        hexToRGB("#ad8b00"),
+        hexToRGB("#876800"),
+        hexToRGB("#614700")
+      ],
+      [
+        hexToRGB("#fcffe6"),
+        hexToRGB("#f4ffb8"),
+        hexToRGB("#eaff8f"),
+        hexToRGB("#d3f261"),
+        hexToRGB("#bae637"),
+        hexToRGB("#a0d911"),
+        hexToRGB("#7cb305"),
+        hexToRGB("#5b8c00"),
+        hexToRGB("#3f6600"),
+        hexToRGB("#254000")
+      ],
+      [
+        hexToRGB("#f6ffed"),
+        hexToRGB("#d9f7be"),
+        hexToRGB("#b7eb8f"),
+        hexToRGB("#95de64"),
+        hexToRGB("#73d13d"),
+        hexToRGB("#52c41a"),
+        hexToRGB("#389e0d"),
+        hexToRGB("#237804"),
+        hexToRGB("#135200"),
+        hexToRGB("#092b00")
+      ],
+      [
+        hexToRGB("#e6fffb"),
+        hexToRGB("#b5f5ec"),
+        hexToRGB("#87e8de"),
+        hexToRGB("#5cdbd3"),
+        hexToRGB("#36cfc9"),
+        hexToRGB("#13c2c2"),
+        hexToRGB("#08979c"),
+        hexToRGB("#006d75"),
+        hexToRGB("#00474f"),
+        hexToRGB("#002329")
+      ],
+      [
+        hexToRGB("#e6f7ff"),
+        hexToRGB("#bae7ff"),
+        hexToRGB("#91d5ff"),
+        hexToRGB("#69c0ff"),
+        hexToRGB("#40a9ff"),
+        hexToRGB("#1890ff"),
+        hexToRGB("#096dd9"),
+        hexToRGB("#0050b3"),
+        hexToRGB("#003a8c"),
+        hexToRGB("#002766")
+      ],
+      [
+        hexToRGB("#f0f5ff"),
+        hexToRGB("#d6e4ff"),
+        hexToRGB("#adc6ff"),
+        hexToRGB("#85a5ff"),
+        hexToRGB("#597ef7"),
+        hexToRGB("#2f54eb"),
+        hexToRGB("#1d39c4"),
+        hexToRGB("#10239e"),
+        hexToRGB("#061178"),
+        hexToRGB("#030852")
+      ],
+      [
+        hexToRGB("#f9f0ff"),
+        hexToRGB("#efdbff"),
+        hexToRGB("#d3adf7"),
+        hexToRGB("#b37feb"),
+        hexToRGB("#9254de"),
+        hexToRGB("#722ed1"),
+        hexToRGB("#531dab"),
+        hexToRGB("#391085"),
+        hexToRGB("#22075e"),
+        hexToRGB("#120338")
+      ],
+      [
+        hexToRGB("#fff0f6"),
+        hexToRGB("#ffd6e7"),
+        hexToRGB("#ffadd2"),
+        hexToRGB("#ff85c0"),
+        hexToRGB("#f759ab"),
+        hexToRGB("#eb2f96"),
+        hexToRGB("#c41d7f"),
+        hexToRGB("#9e1068"),
+        hexToRGB("#780650"),
+        hexToRGB("#520339")
+      ],
+      [
+        hexToRGB("#a6a6a6"),
+        hexToRGB("#999999"),
+        hexToRGB("#8c8c8c"),
+        hexToRGB("#808080"),
+        hexToRGB("#737373"),
+        hexToRGB("#666666"),
+        hexToRGB("#404040"),
+        hexToRGB("#1a1a1a"),
+        hexToRGB("#000000"),
+        hexToRGB("#000000")
       ]
     ]
   },
@@ -616,77 +717,124 @@ export const PRESETS: Palette[] = [
     ]
   },
   {
-    hues: ["Red", "Green", "Blue"],
-    shades: ["50", "100", "200", "300", "400"],
+    hues: [
+      "Gray",
+      "Blue",
+      "Green",
+      "Purple",
+      "Yellow",
+      "Orange",
+      "Red",
+      "Pink"
+    ],
+    shades: [
+      "000",
+      "100",
+      "200",
+      "300",
+      "400",
+      "500",
+      "600",
+      "700",
+      "800",
+      "900"
+    ],
     colors: [
       [
-        {
-          r: 0.9783901377008425,
-          g: 0.35953939267575336,
-          b: 0.22051826554888315
-        },
-        {
-          r: 0.8233185730271249,
-          g: 0.2777279774920036,
-          b: 0.19905678018195755
-        },
-        {
-          r: 0.7078511912624108,
-          g: 0.15041437702558877,
-          b: 0.10232903375963262
-        },
-        {
-          r: 0.5700142219638018,
-          g: 0.005319274491069229,
-          b: 0.15647091658177512
-        },
-        {
-          r: 0.3639275956504139,
-          g: 0.09375304535178947,
-          b: 0.03946903908168702
-        }
+        hexToRGB("#fafbfc"),
+        hexToRGB("#f6f8fa"),
+        hexToRGB("#e1e4e8"),
+        hexToRGB("#d1d5da"),
+        hexToRGB("#959da5"),
+        hexToRGB("#6a737d"),
+        hexToRGB("#586069"),
+        hexToRGB("#444d56"),
+        hexToRGB("#2f363d"),
+        hexToRGB("#24292e")
       ],
       [
-        { r: 0.2681739379482392, g: 0.633060141301358, b: 0.45166600417023545 },
-        {
-          r: 0.24677377897388075,
-          g: 0.5232733327900222,
-          b: 0.2832511485305114
-        },
-        {
-          r: 0.18755012896797302,
-          g: 0.41700510772051375,
-          b: 0.20476650384447775
-        },
-        {
-          r: 0.0479993069426722,
-          g: 0.32193260892655484,
-          b: 0.1280168534149834
-        },
-        {
-          r: 0.012427425239623126,
-          g: 0.22259530871496774,
-          b: 0.09421932715330802
-        }
+        hexToRGB("#f1f8ff"),
+        hexToRGB("#dbedff"),
+        hexToRGB("#c8e1ff"),
+        hexToRGB("#79b8ff"),
+        hexToRGB("#2188ff"),
+        hexToRGB("#0366d6"),
+        hexToRGB("#005cc5"),
+        hexToRGB("#044289"),
+        hexToRGB("#032f62"),
+        hexToRGB("#05264c")
       ],
       [
-        { r: 0.3749379277908753, g: 0.5899869183679388, b: 0.7438739393947659 },
-        { r: 0.280582845758216, g: 0.48740044770490726, b: 0.6312646929024517 },
-        {
-          r: 0.05358682011851349,
-          g: 0.3963841870194739,
-          b: 0.5417193115002815
-        },
-        {
-          r: 0.13004332959275933,
-          g: 0.28585664026396485,
-          b: 0.4373745530576504
-        },
-        {
-          r: 0.057418371802411265,
-          g: 0.1993244016051749,
-          b: 0.3026093462932969
-        }
+        hexToRGB("#f0fff4"),
+        hexToRGB("#dcffe4"),
+        hexToRGB("#bef5cb"),
+        hexToRGB("#85e89d"),
+        hexToRGB("#34d058"),
+        hexToRGB("#28a745"),
+        hexToRGB("#22863a"),
+        hexToRGB("#176f2c"),
+        hexToRGB("#165c26"),
+        hexToRGB("#144620")
+      ],
+      [
+        hexToRGB("#f5f0ff"),
+        hexToRGB("#e6dcfd"),
+        hexToRGB("#d1bcf9"),
+        hexToRGB("#b392f0"),
+        hexToRGB("#8a63d2"),
+        hexToRGB("#6f42c1"),
+        hexToRGB("#5a32a3"),
+        hexToRGB("#4c2889"),
+        hexToRGB("#3a1d6e"),
+        hexToRGB("#29134e")
+      ],
+      [
+        hexToRGB("#fffdef"),
+        hexToRGB("#fffbdd"),
+        hexToRGB("#fff5b1"),
+        hexToRGB("#ffea7f"),
+        hexToRGB("#ffdf5d"),
+        hexToRGB("#ffd33d"),
+        hexToRGB("#f9c513"),
+        hexToRGB("#dbab09"),
+        hexToRGB("#b08800"),
+        hexToRGB("#735c0f")
+      ],
+      [
+        hexToRGB("#fff8f2"),
+        hexToRGB("#ffebda"),
+        hexToRGB("#ffd1ac"),
+        hexToRGB("#ffab70"),
+        hexToRGB("#fb8532"),
+        hexToRGB("#f66a0a"),
+        hexToRGB("#e36209"),
+        hexToRGB("#d15704"),
+        hexToRGB("#c24e00"),
+        hexToRGB("#a04100")
+      ],
+      [
+        hexToRGB("#ffeef0"),
+        hexToRGB("#ffdce0"),
+        hexToRGB("#fdaeb7"),
+        hexToRGB("#f97583"),
+        hexToRGB("#ea4a5a"),
+        hexToRGB("#d73a49"),
+        hexToRGB("#cb2431"),
+        hexToRGB("#b31d28"),
+        hexToRGB("#9e1c23"),
+        hexToRGB("#86181d")
+      ],
+      [
+        hexToRGB("#ffeef8"),
+        hexToRGB("#fedbf0"),
+        hexToRGB("#f9b3dd"),
+        hexToRGB("#f692ce"),
+        hexToRGB("#ec6cb9"),
+        hexToRGB("#ea4aaa"),
+        hexToRGB("#d03592"),
+        hexToRGB("#b93a86"),
+        hexToRGB("#99306f"),
+        hexToRGB("#6d224f")
       ]
     ]
   }
