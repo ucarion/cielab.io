@@ -5,6 +5,8 @@ import React, {
   useEffect,
   useMemo
 } from "react";
+import InputGroup from "react-bootstrap/InputGroup";
+import Form from "react-bootstrap/Form";
 import {
   RGB,
   LCH,
@@ -148,7 +150,8 @@ export default function ColorEditor({
           display: "grid",
           justifyContent: "center",
           alignItems: "center",
-          color: isTextWhite ? "white" : "black"
+          color: isTextWhite ? "white" : "black",
+          marginBottom: "8px"
         }}
       >
         {hue} {shade}{" "}
@@ -163,81 +166,62 @@ export default function ColorEditor({
           gridColumnGap: "16px"
         }}
       >
-        <div style={{ textAlign: "center" }}>
-          <div>
-            <input
-              style={{
-                width: "100%",
-                textAlign: "center",
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderColor: isRGBInputValid ? "black" : "red"
-              }}
-              value={rgbInput}
-              onChange={handleRGBChange}
-              onBlur={handleRGBBlur}
-              onKeyPress={handleRGBKeyPress}
-            />
-          </div>
-          RGB HEX
-        </div>
+        <InputGroup className="mb-3">
+          <InputGroup.Prepend>
+            <InputGroup.Text>HEX</InputGroup.Text>
+          </InputGroup.Prepend>
+          <Form.Control
+            value={rgbInput}
+            onChange={handleRGBChange}
+            onBlur={handleRGBBlur}
+            onKeyPress={handleRGBKeyPress}
+            isInvalid={!isRGBInputValid}
+          />
+        </InputGroup>
+
         <div
           style={{
             textAlign: "center",
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)"
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gridColumnGap: "8px"
           }}
         >
-          <div>
-            <input
-              style={{
-                width: "100%",
-                textAlign: "center",
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderColor: isLInputValid ? "black" : "red"
-              }}
+          <InputGroup className="mb-3">
+            <InputGroup.Prepend>
+              <InputGroup.Text>L</InputGroup.Text>
+            </InputGroup.Prepend>
+            <Form.Control
               value={lInput}
-              onChange={event => handleLCHChange(event, "l")}
+              onChange={(event: any) => handleLCHChange(event, "l")}
               onBlur={handleLCHBlur}
               onKeyPress={handleLCHKeyPress}
             />
-            Luminance
-          </div>
-          <div>
-            <input
-              style={{
-                width: "100%",
-                textAlign: "center",
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderColor: isCInputValid ? "black" : "red"
-              }}
+          </InputGroup>
+
+          <InputGroup className="mb-3">
+            <InputGroup.Prepend>
+              <InputGroup.Text>C</InputGroup.Text>
+            </InputGroup.Prepend>
+            <Form.Control
               value={cInput}
-              onChange={event => handleLCHChange(event, "c")}
+              onChange={(event: any) => handleLCHChange(event, "c")}
               onBlur={handleLCHBlur}
               onKeyPress={handleLCHKeyPress}
             />
-            Chroma
-          </div>
-          <div>
-            <input
-              style={{
-                boxSizing: "border-box",
-                width: "100%",
-                maxWidth: "100%",
-                textAlign: "center",
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderColor: isHInputValid ? "black" : "red"
-              }}
+          </InputGroup>
+
+          <InputGroup className="mb-3">
+            <InputGroup.Prepend>
+              <InputGroup.Text>H</InputGroup.Text>
+            </InputGroup.Prepend>
+            <Form.Control
               value={hInput}
-              onChange={event => handleLCHChange(event, "h")}
+              onChange={(event: any) => handleLCHChange(event, "h")}
               onBlur={handleLCHBlur}
               onKeyPress={handleLCHKeyPress}
             />
-            Hue
-          </div>
+          </InputGroup>
         </div>
       </div>
     </div>

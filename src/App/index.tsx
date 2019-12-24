@@ -11,9 +11,20 @@ import {
 import TunnelGraph from "./TunnelGraph";
 import { Palette } from "./types";
 import ColorEditor from "./ColorEditor";
-import "./index.css";
 import PaletteDisplay from "./PaletteDisplay";
 import { PRESETS } from "./presets";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPalette } from "@fortawesome/free-solid-svg-icons";
+import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+
+import "./index.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const DEFAULT_COLOR = { r: 0.5, g: 0.5, b: 0.5 };
 
@@ -130,8 +141,50 @@ export default function App() {
   const isHeaderTextWhite = contrastRatioWhite > contrastRatioBlack;
 
   return (
-    <div>
-      <div
+    <>
+      <Navbar
+        style={{ backgroundColor: rgbToHex(selectedColorRGB) }}
+        variant={isHeaderTextWhite ? "dark" : "light"}
+      >
+        <Navbar.Brand href="/">
+          <FontAwesomeIcon icon={faPalette} />
+        </Navbar.Brand>
+
+        <Nav className="mr-auto">
+          <Nav.Link active href="/">
+            cielab.io
+          </Nav.Link>
+
+          <Form inline className="ml-3">
+            <Form.Label
+              className={isHeaderTextWhite ? "text-light" : "text-dark"}
+            >
+              Load preset
+            </Form.Label>
+            <Form.Control
+              as="select"
+              className="ml-3"
+              onChange={handlePresetChange}
+            >
+              <option>Google (Material UI)</option>
+              <option>IBM (Carbon)</option>
+              <option>US Digital Service (USWDS)</option>
+              <option>Ant Financial (Ant Design)</option>
+              <option>Segment (Evergreen)</option>
+              <option>GitHub (Primer)</option>
+            </Form.Control>
+          </Form>
+        </Nav>
+
+        <Button
+          variant={isHeaderTextWhite ? "outline-light" : "outline-dark"}
+          onClick={handleExportJSON}
+        >
+          Export as JSON / JavaScript
+        </Button>
+      </Navbar>
+
+      {/* <div
         style={{
           height: "56px",
           backgroundColor: rgbToHex(selectedColorRGB),
@@ -196,7 +249,7 @@ export default function App() {
             Export as JSON / JavaScript
           </button>
         </span>
-      </div>
+      </div> */}
 
       <div
         style={{ paddingTop: "8px", paddingLeft: "8px", paddingRight: "8px" }}
@@ -244,57 +297,178 @@ export default function App() {
               gridRowGap: "16px"
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center"
-              }}
-            >
-              <div>{hues[selectedColor.hue]}</div>
+            <h2>{hues[selectedColor.hue]}</h2>
+            <h2>{shades[selectedColor.shade]}</h2>
+            <div>
+              <h3 className="h4">
+                Luminance{" "}
+                <small className="text-muted">
+                  vs. other {hues[selectedColor.hue]}s
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="tooltip-hue-l">
+                        Usually, you want shades to have roughly equal luminance
+                        step sizes.
+                        <br />
+                        <br />
+                        That way, you have uniform coverage of light and dark
+                        colors.
+                      </Tooltip>
+                    }
+                  >
+                    <FontAwesomeIcon className="ml-2" icon={faQuestionCircle} />
+                  </OverlayTrigger>
+                </small>
+              </h3>
+              <TunnelGraph
+                axis="l"
+                displayPrecision={0}
+                sequence={hueSequence}
+                selectedIndex={selectedColor.shade}
+              />
             </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center"
-              }}
-            >
-              <div>{shades[selectedColor.shade]}</div>
+            <div>
+              <h3 className="h4">
+                Luminance{" "}
+                <small className="text-muted">
+                  vs. other {shades[selectedColor.shade]}s
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="tooltip-shade-l">
+                        Usually, you want hues to have roughly the same
+                        luminance.
+                        <br />
+                        <br />
+                        That way, hues have consistent visual weight.
+                      </Tooltip>
+                    }
+                  >
+                    <FontAwesomeIcon className="ml-2" icon={faQuestionCircle} />
+                  </OverlayTrigger>
+                </small>
+              </h3>
+              <TunnelGraph
+                axis="l"
+                displayPrecision={0}
+                sequence={shadeSequence}
+                selectedIndex={selectedColor.hue}
+              />
             </div>
-            <TunnelGraph
-              axis="l"
-              sequence={hueSequence}
-              selectedIndex={selectedColor.shade}
-            />
-            <TunnelGraph
-              axis="l"
-              sequence={shadeSequence}
-              selectedIndex={selectedColor.hue}
-            />
-            <TunnelGraph
-              axis="c"
-              sequence={hueSequence}
-              selectedIndex={selectedColor.shade}
-            />
-            <TunnelGraph
-              axis="c"
-              sequence={shadeSequence}
-              selectedIndex={selectedColor.hue}
-            />
-            <TunnelGraph
-              axis="h"
-              sequence={hueSequence}
-              selectedIndex={selectedColor.shade}
-            />
-            <TunnelGraph
-              axis="h"
-              sequence={shadeSequence}
-              selectedIndex={selectedColor.hue}
-            />
+            <div>
+              <h3 className="h4">
+                Chroma{" "}
+                <small className="text-muted">
+                  vs. other {hues[selectedColor.hue]}s
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="tooltip-hue-c">
+                        Usually, you want chroma to be greatest in the "middle"
+                        shades, and should step smoothly between shades.
+                        <br />
+                        <br />
+                        Oftentimes, you can sacrifice chroma to make luminance
+                        and hue work.
+                      </Tooltip>
+                    }
+                  >
+                    <FontAwesomeIcon className="ml-2" icon={faQuestionCircle} />
+                  </OverlayTrigger>
+                </small>
+              </h3>
+              <TunnelGraph
+                axis="c"
+                displayPrecision={0}
+                sequence={hueSequence}
+                selectedIndex={selectedColor.shade}
+              />
+            </div>
+            <div>
+              <h3 className="h4">
+                Chroma{" "}
+                <small className="text-muted">
+                  vs. other {shades[selectedColor.shade]}s
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="tooltip-shade-c">
+                        Usually, it's fine if this graph doesn't have any clear
+                        pattern.
+                        <br />
+                        <br />
+                        Oftentimes, you can sacrifice chroma to make luminance
+                        and hue work.
+                      </Tooltip>
+                    }
+                  >
+                    <FontAwesomeIcon className="ml-2" icon={faQuestionCircle} />
+                  </OverlayTrigger>
+                </small>
+              </h3>
+              <TunnelGraph
+                axis="c"
+                displayPrecision={0}
+                sequence={shadeSequence}
+                selectedIndex={selectedColor.hue}
+              />
+            </div>
+            <div>
+              <h3 className="h4">
+                Hue{" "}
+                <small className="text-muted">
+                  vs. other {hues[selectedColor.hue]}s
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="tooltip-hue-h">
+                        Usually, you want shades to have roughly the same hue.
+                        <br />
+                        <br />
+                        That way, shades don't seem to "drift" into a different
+                        color.
+                      </Tooltip>
+                    }
+                  >
+                    <FontAwesomeIcon className="ml-2" icon={faQuestionCircle} />
+                  </OverlayTrigger>
+                </small>
+              </h3>
+              <TunnelGraph
+                axis="h"
+                displayPrecision={1}
+                sequence={hueSequence}
+                selectedIndex={selectedColor.shade}
+              />
+            </div>
+            <div>
+              <h3 className="h4">
+                Hue{" "}
+                <small className="text-muted">
+                  vs. other {shades[selectedColor.shade]}s
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="tooltip-shade-h">
+                        Usually, you want hues to have roughly equal hue step
+                        sizes.
+                        <br />
+                        <br />
+                        That way, you have uniform coverage of the color wheel.
+                      </Tooltip>
+                    }
+                  >
+                    <FontAwesomeIcon className="ml-2" icon={faQuestionCircle} />
+                  </OverlayTrigger>
+                </small>
+              </h3>
+              <TunnelGraph
+                axis="h"
+                displayPrecision={1}
+                sequence={shadeSequence}
+                selectedIndex={selectedColor.hue}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

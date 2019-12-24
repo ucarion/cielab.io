@@ -105,8 +105,8 @@ function ColorDisplay({ rgb, selected, onSelect }: ColorDisplayProps) {
       onClick={onSelect}
     >
       {isTextWhite
-        ? contrastRatioWhite.toFixed(2)
-        : contrastRatioBlack.toFixed(2)}
+        ? contrastRatioWhite.toFixed(1)
+        : contrastRatioBlack.toFixed(1)}
     </div>
   );
 }

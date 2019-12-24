@@ -19,11 +19,17 @@ import {
 
 interface Props {
   axis: "l" | "c" | "h";
+  displayPrecision: number;
   sequence: RGB[];
   selectedIndex: number;
 }
 
-export default function TunnelGraph({ axis, sequence, selectedIndex }: Props) {
+export default function TunnelGraph({
+  axis,
+  sequence,
+  selectedIndex,
+  displayPrecision
+}: Props) {
   const colorSequence = useMemo(
     () => sequence.map(rgb => ({ rgb, lch: rgbToLCH(rgb) })),
     [sequence]
@@ -49,7 +55,7 @@ export default function TunnelGraph({ axis, sequence, selectedIndex }: Props) {
               backgroundColor: index === selectedIndex ? "#eee" : "white"
             }}
           >
-            {lch[axis].toFixed(2)}
+            {lch[axis].toFixed(displayPrecision)}
           </div>
         ))}
 

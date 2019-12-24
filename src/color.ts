@@ -55,7 +55,7 @@ export function lchToRGB(lch: LCH): RGB {
 }
 
 export function hexToRGB(hex: string): RGB {
-  if (hex.length !== 7) {
+  if (!/#[0-9a-f]{6}/i.test(hex)) {
     throw new TypeError(`hex has wrong length: ${hex}`);
   }
 
