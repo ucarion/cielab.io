@@ -5,7 +5,8 @@ import {
   rgbToHex,
   wcagContrastRatio,
   RGB_BLACK,
-  RGB_WHITE
+  RGB_WHITE,
+  hexToRGB
 } from "../color";
 import TunnelGraph from "./TunnelGraph";
 import { Palette } from "./types";

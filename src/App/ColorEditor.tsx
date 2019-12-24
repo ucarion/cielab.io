@@ -171,7 +171,8 @@ export default function ColorEditor({
             WCAG Contrast Ratio:{" "}
             {isTextWhite
               ? contrastRatioWhite.toFixed(2)
-              : contrastRatioBlack.toFixed(2)}
+              : contrastRatioBlack.toFixed(2)}{" "}
+            (vs. {isTextWhite ? "white" : "black"})
           </div>
 
           <div

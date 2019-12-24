@@ -7,6 +7,10 @@ import {
   RGB_BLACK,
   RGB_WHITE
 } from "../color";
+import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 interface Props {
   palette: Palette;
@@ -21,6 +25,8 @@ export default function PaletteDisplay({
   selectedShade,
   onColorSelect
 }: Props) {
+  const selectedRGB = colors[selectedHue][selectedShade];
+
   return (
     <div
       style={{
@@ -29,7 +35,29 @@ export default function PaletteDisplay({
         gridTemplateRows: `30px repeat(${hues.length}, 50px)`
       }}
     >
-      <div />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "right",
+          alignItems: "center",
+          paddingRight: "8px"
+        }}
+      >
+        <OverlayTrigger
+          placement="bottom"
+          overlay={
+            <Tooltip id="tooltip-palette-display">
+              This table shows you all of the colors in the palette.
+              <br />
+              <br />
+              When you click on a color, the numbers in the table are the WCAG
+              constrast ratio of those colors versus your selected color.
+            </Tooltip>
+          }
+        >
+          <FontAwesomeIcon className="ml-2" icon={faQuestionCircle} />
+        </OverlayTrigger>
+      </div>
       {shades.map((shade, shadeIndex) => (
         <div
           key={shadeIndex}
@@ -62,6 +90,7 @@ export default function PaletteDisplay({
             <ColorDisplay
               key={shadeIndex}
               rgb={colors[hueIndex][shadeIndex]}
+              selectedRGB={selectedRGB}
               selected={
                 hueIndex === selectedHue && shadeIndex === selectedShade
               }
@@ -78,11 +107,17 @@ export default function PaletteDisplay({
 
 interface ColorDisplayProps {
   rgb: RGB;
+  selectedRGB: RGB;
   selected: boolean;
   onSelect: () => void;
 }
 
-function ColorDisplay({ rgb, selected, onSelect }: ColorDisplayProps) {
+function ColorDisplay({
+  rgb,
+  selectedRGB,
+  selected,
+  onSelect
+}: ColorDisplayProps) {
   const contrastRatioWhite = useMemo(() => wcagContrastRatio(rgb, RGB_WHITE), [
     rgb
   ]);
@@ -91,6 +126,11 @@ function ColorDisplay({ rgb, selected, onSelect }: ColorDisplayProps) {
   ]);
 
   const isTextWhite = contrastRatioWhite > contrastRatioBlack;
+
+  const contrastRatioSelected = useMemo(
+    () => wcagContrastRatio(rgb, selectedRGB),
+    [rgb, selectedRGB]
+  );
 
   return (
     <div
@@ -104,9 +144,7 @@ function ColorDisplay({ rgb, selected, onSelect }: ColorDisplayProps) {
       }}
       onClick={onSelect}
     >
-      {isTextWhite
-        ? contrastRatioWhite.toFixed(1)
-        : contrastRatioBlack.toFixed(1)}
+      {contrastRatioSelected.toFixed(1)}
     </div>
   );
 }
