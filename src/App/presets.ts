@@ -17,6 +17,7 @@ export const PRESETS: Palette[] = [
       "LightGreen",
       "Lime",
       "Yellow",
+      "Amber",
       "Orange",
       "DeepOrange",
       "Brown",

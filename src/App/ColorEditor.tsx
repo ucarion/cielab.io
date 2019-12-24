@@ -19,6 +19,11 @@ import {
   RGB_WHITE,
   RGB_BLACK
 } from "../color";
+import {
+  faCheckCircle,
+  faTimesCircle
+} from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
   rgb: RGB;
@@ -52,6 +57,7 @@ export default function ColorEditor({
   ]);
 
   const isTextWhite = contrastRatioWhite > contrastRatioBlack;
+  const contrastRatio = Math.max(contrastRatioWhite, contrastRatioBlack);
 
   useEffect(() => {
     setRGBInput(rgbToHex(rgb));
@@ -141,7 +147,7 @@ export default function ColorEditor({
   };
 
   return (
-    <div>
+    <div className="mt-3">
       <div
         style={{
           width: "100%",
@@ -150,14 +156,59 @@ export default function ColorEditor({
           display: "grid",
           justifyContent: "center",
           alignItems: "center",
+          textAlign: "center",
           color: isTextWhite ? "white" : "black",
-          marginBottom: "8px"
+          marginBottom: "8px",
+          transition: "background-color 0.5s, color 0.5s"
         }}
       >
-        {hue} {shade}{" "}
-        {isTextWhite
-          ? contrastRatioWhite.toFixed(2)
-          : contrastRatioBlack.toFixed(2)}
+        <div>
+          <h3>
+            {hue} {shade}
+          </h3>
+
+          <div>
+            WCAG Contrast Ratio:{" "}
+            {isTextWhite
+              ? contrastRatioWhite.toFixed(2)
+              : contrastRatioBlack.toFixed(2)}
+          </div>
+
+          <div
+            style={{
+              marginTop: "8px",
+              display: "grid",
+              gridTemplateRows: "repeat(3, 1fr)",
+              gridTemplateColumns: "repeat(3, 1fr)"
+            }}
+          >
+            <div />
+            <div>AA</div>
+            <div>AAA</div>
+            <div>Small Text</div>
+            <div>
+              <FontAwesomeIcon
+                icon={contrastRatio > 4.5 ? faCheckCircle : faTimesCircle}
+              />
+            </div>
+            <div>
+              <FontAwesomeIcon
+                icon={contrastRatio > 7 ? faCheckCircle : faTimesCircle}
+              />
+            </div>
+            <div>Large Text</div>
+            <div>
+              <FontAwesomeIcon
+                icon={contrastRatio > 3 ? faCheckCircle : faTimesCircle}
+              />
+            </div>
+            <div>
+              <FontAwesomeIcon
+                icon={contrastRatio > 4.5 ? faCheckCircle : faTimesCircle}
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <div
         style={{

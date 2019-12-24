@@ -1,9 +1,8 @@
 import React, { useState, ChangeEvent, useMemo } from "react";
 import {
   RGB,
-  LCH,
   rgbToLCH,
-  lchToRGB,
+  rgbToHex,
   wcagContrastRatio,
   RGB_BLACK,
   RGB_WHITE
@@ -22,50 +21,49 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import InputGroup from "react-bootstrap/InputGroup";
 
-import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const DEFAULT_COLOR = { r: 0.5, g: 0.5, b: 0.5 };
 
 export default function App() {
-  const [{ hues, shades, colors }, setPalette] = useState(PRESETS[0]);
+  const getSavedPalette = (): Palette => {
+    const savedPreset = localStorage.getItem("preset");
+    return savedPreset === null ? PRESETS[0] : JSON.parse(savedPreset);
+  };
+
+  const [isUsingLocal, setIsUsingLocal] = useState(true);
+  const [{ hues, shades, colors }, setPalette] = useState(getSavedPalette());
   const [selectedColor, setSelectedColor] = useState({
     hue: Math.round(PRESETS[0].hues.length / 2),
     shade: Math.round(PRESETS[0].shades.length / 2)
   });
 
+  const [newHueName, setNewHueName] = useState("");
+  const [newShadeName, setNewShadeName] = useState("");
+
   const handlePresetChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const preset = PRESETS[event.target.selectedIndex];
+    const preset =
+      event.target.selectedIndex === 0
+        ? getSavedPalette()
+        : PRESETS[event.target.selectedIndex - 1];
 
     setSelectedColor({
       hue: Math.round(preset.hues.length / 2),
       shade: Math.round(preset.shades.length / 2)
     });
     setPalette(preset);
+    setIsUsingLocal(event.target.selectedIndex === 0);
   };
 
-  const channelToHex = (t: number): string => {
-    return Math.round(t * 255)
-      .toString(16)
-      .padStart(2, "0");
-  };
-
-  const rgbToHex = ({ r, g, b }: RGB): string => {
-    return `#${channelToHex(r)}${channelToHex(g)}${channelToHex(b)}`;
-  };
-
-  const hexToRGB = (hex: string): RGB => {
-    return {
-      r: parseInt(hex.substring(1, 3), 16) / 255,
-      g: parseInt(hex.substring(3, 5), 16) / 255,
-      b: parseInt(hex.substring(5, 7), 16) / 255
-    };
+  const handleSavePalette = () => {
+    localStorage.setItem("preset", JSON.stringify({ hues, shades, colors }));
   };
 
   const handleAddHue = () => {
     setPalette({
-      hues: [...hues, "new hue"],
+      hues: [...hues, newHueName],
       shades,
       colors: [...colors, Array(shades.length).fill(DEFAULT_COLOR)]
     });
@@ -74,7 +72,7 @@ export default function App() {
   const handleAddShade = () => {
     setPalette({
       hues,
-      shades: [...shades, "new shade"],
+      shades: [...shades, newShadeName],
       colors: colors.map(sequence => [...sequence, DEFAULT_COLOR])
     });
   };
@@ -95,10 +93,6 @@ export default function App() {
         ...colors.slice(hue + 1)
       ]
     });
-  };
-
-  const handleColorChange = (event: ChangeEvent<HTMLInputElement>) => {
-    updateSelectedColor(hexToRGB(event.target.value));
   };
 
   const triggerDownload = (fileName: string, blob: Blob) => {
@@ -143,7 +137,10 @@ export default function App() {
   return (
     <>
       <Navbar
-        style={{ backgroundColor: rgbToHex(selectedColorRGB) }}
+        style={{
+          backgroundColor: rgbToHex(selectedColorRGB),
+          transition: "background-color 0.5s, color 0.5s"
+        }}
         variant={isHeaderTextWhite ? "dark" : "light"}
       >
         <Navbar.Brand href="/">
@@ -166,6 +163,7 @@ export default function App() {
               className="ml-3"
               onChange={handlePresetChange}
             >
+              <option>Locally saved preset</option>
               <option>Google (Material UI)</option>
               <option>IBM (Carbon)</option>
               <option>US Digital Service (USWDS)</option>
@@ -174,6 +172,16 @@ export default function App() {
               <option>GitHub (Primer)</option>
             </Form.Control>
           </Form>
+
+          {isUsingLocal && (
+            <Button
+              className="ml-3"
+              variant={isHeaderTextWhite ? "outline-light" : "outline-dark"}
+              onClick={handleSavePalette}
+            >
+              Save
+            </Button>
+          )}
         </Nav>
 
         <Button
@@ -183,73 +191,6 @@ export default function App() {
           Export as JSON / JavaScript
         </Button>
       </Navbar>
-
-      {/* <div
-        style={{
-          height: "56px",
-          backgroundColor: rgbToHex(selectedColorRGB),
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingLeft: "32px",
-          paddingRight: "32px",
-          boxSizing: "border-box",
-          color: isHeaderTextWhite ? "white" : "black",
-          transition: "background-color 0.5s, color 0.5s"
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center" }}>
-          <a
-            style={{
-              color: isHeaderTextWhite ? "white" : "black",
-              transition: "color 0.5s",
-              display: "flex",
-              alignItems: "center"
-            }}
-            href="/"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
-                fill={isHeaderTextWhite ? "white" : "black"}
-              />
-              <path d="M0 0h24v24H0z" fill="none" />
-            </svg>
-          </a>
-          <a
-            style={{
-              color: isHeaderTextWhite ? "white" : "black",
-              transition: "color 0.5s",
-              display: "flex",
-              alignItems: "center"
-            }}
-            href="/"
-          >
-            <span style={{ marginLeft: "8px" }}>cielab.io</span>
-          </a>
-          <span style={{ marginLeft: "32px" }}>Load preset</span>
-          <select style={{ marginLeft: "8px" }} onChange={handlePresetChange}>
-            <option>Google (Material UI)</option>
-            <option>IBM (Carbon)</option>
-            <option>US Digital Service (USWDS)</option>
-            <option>Ant Financial (Ant Design)</option>
-            <option>Segment (Evergreen)</option>
-            <option>GitHub (Primer)</option>
-          </select>
-        </span>
-
-        <span>
-          <button>Export as Figma Style</button>
-          <button onClick={handleExportJSON}>
-            Export as JSON / JavaScript
-          </button>
-        </span>
-      </div> */}
 
       <div
         style={{ paddingTop: "8px", paddingLeft: "8px", paddingRight: "8px" }}
@@ -269,24 +210,48 @@ export default function App() {
               onColorSelect={setSelectedColor}
             />
 
-            <input
-              type="color"
-              value={rgbToHex(colors[selectedColor.hue][selectedColor.shade])}
-              onChange={handleColorChange}
+            {isUsingLocal && (
+              <>
+                <InputGroup className="mt-3 mb-3">
+                  <Form.Control
+                    placeholder="New hue name"
+                    value={newHueName}
+                    onChange={(event: any) => setNewHueName(event.target.value)}
+                  />
+                  <InputGroup.Append>
+                    <Button onClick={handleAddHue} variant="outline-secondary">
+                      Add Hue
+                    </Button>
+                  </InputGroup.Append>
+                </InputGroup>
+
+                <InputGroup className="mb-3">
+                  <Form.Control
+                    placeholder="New shade name"
+                    value={newShadeName}
+                    onChange={(event: any) =>
+                      setNewShadeName(event.target.value)
+                    }
+                  />
+                  <InputGroup.Append>
+                    <Button
+                      onClick={handleAddShade}
+                      variant="outline-secondary"
+                    >
+                      Add Shade
+                    </Button>
+                  </InputGroup.Append>
+                </InputGroup>
+              </>
+            )}
+
+            <ColorEditor
+              rgb={selectedColorRGB}
+              lch={selectedColorLCH}
+              hue={hues[selectedColor.hue]}
+              shade={shades[selectedColor.shade]}
+              onUpdate={rgb => updateSelectedColor(rgb)}
             />
-
-            <button onClick={handleAddHue}>Add Hue</button>
-            <button onClick={handleAddShade}>Add Shade</button>
-
-            <div>
-              <ColorEditor
-                rgb={selectedColorRGB}
-                lch={selectedColorLCH}
-                hue={hues[selectedColor.hue]}
-                shade={shades[selectedColor.shade]}
-                onUpdate={rgb => updateSelectedColor(rgb)}
-              />
-            </div>
           </div>
           <div
             style={{
