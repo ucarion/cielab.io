@@ -37,8 +37,8 @@ export default function App() {
   const [isUsingLocal, setIsUsingLocal] = useState(true);
   const [{ hues, shades, colors }, setPalette] = useState(getSavedPalette());
   const [selectedColor, setSelectedColor] = useState({
-    hue: Math.round(PRESETS[0].hues.length / 2),
-    shade: Math.round(PRESETS[0].shades.length / 2)
+    hue: Math.floor((hues.length - 1) / 1.1),
+    shade: Math.floor((shades.length - 1) / 1.75)
   });
 
   const [newHueName, setNewHueName] = useState("");
@@ -51,8 +51,8 @@ export default function App() {
         : PRESETS[event.target.selectedIndex - 1];
 
     setSelectedColor({
-      hue: Math.round(preset.hues.length / 2),
-      shade: Math.round(preset.shades.length / 2)
+      hue: Math.floor((preset.hues.length - 1) / 2),
+      shade: Math.floor((preset.shades.length - 1) / 2)
     });
     setPalette(preset);
     setIsUsingLocal(event.target.selectedIndex === 0);
@@ -153,7 +153,14 @@ export default function App() {
             cielab.io
           </Nav.Link>
 
-          <Form inline className="ml-3">
+          <Nav.Link
+            className="ml-3"
+            href="https://github.com/ucarion/cielab.io"
+          >
+            About this tool
+          </Nav.Link>
+
+          <Form className="ml-3" inline>
             <Form.Label
               className={isHeaderTextWhite ? "text-light" : "text-dark"}
             >

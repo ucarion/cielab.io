@@ -25,7 +25,11 @@ module.exports = {
     publicPath: "/",
     filename: "[name].bundle.js"
   },
-  plugins: [new HtmlWebpackPlugin()],
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: "CIELab | Color tool based on human perception"
+    })
+  ],
   devServer: {
     historyApiFallback: true
   }

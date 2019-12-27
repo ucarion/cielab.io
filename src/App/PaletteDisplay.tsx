@@ -38,7 +38,7 @@ export default function PaletteDisplay({
       <div
         style={{
           display: "flex",
-          justifyContent: "right",
+          justifyContent: "flex-end",
           alignItems: "center",
           paddingRight: "8px"
         }}
