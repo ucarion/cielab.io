@@ -31,14 +31,14 @@ const DEFAULT_COLOR = { r: 0.5, g: 0.5, b: 0.5 };
 export default function App() {
   const getSavedPalette = (): Palette => {
     const savedPreset = localStorage.getItem("preset");
-    return savedPreset === null ? PRESETS[0] : JSON.parse(savedPreset);
+    return savedPreset === null ? PRESETS[3] : JSON.parse(savedPreset);
   };
 
   const [isUsingLocal, setIsUsingLocal] = useState(true);
   const [{ hues, shades, colors }, setPalette] = useState(getSavedPalette());
   const [selectedColor, setSelectedColor] = useState({
-    hue: Math.floor((hues.length - 1) / 1.1),
-    shade: Math.floor((shades.length - 1) / 1.75)
+    hue: Math.floor((hues.length - 1) / 2),
+    shade: Math.floor((shades.length - 1) / 2)
   });
 
   const [newHueName, setNewHueName] = useState("");
