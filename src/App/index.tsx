@@ -178,6 +178,7 @@ export default function App() {
               <option>Ant Financial (Ant Design)</option>
               <option>Segment (Evergreen)</option>
               <option>GitHub (Primer)</option>
+              <option>Contentful (Forma 36)</option>
             </Form.Control>
           </Form>
 
