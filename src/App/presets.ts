@@ -1184,5 +1184,88 @@ export const PRESETS: Palette[] = [
         hexToRGB("#7F5200")
       ],
     ]
+  },
+  {
+    hues: [
+      "Neutral",
+      "Blue",
+      "Green",
+      "Yellow",
+      "Red"
+    ],
+    shades: [
+      "50",
+      "100",
+      "200",
+      "300",
+      "400",
+      "500",
+      "600",
+      "700",
+      "800",
+      "900",
+    ],
+    colors: [
+      [
+        hexToRGB("#F5F7F8"),
+        hexToRGB("#DBE0E5"),
+        hexToRGB("#C1C7D0"),
+        hexToRGB("#A3ACB8"),
+        hexToRGB("#848F9B"),
+        hexToRGB("#66717F"),
+        hexToRGB("#4C5662"),
+        hexToRGB("#363F4A"),
+        hexToRGB("#242B34"),
+        hexToRGB("#131C27")
+      ],
+      [
+        hexToRGB("#EDF8FC"),
+        hexToRGB("#C6E5F1"),
+        hexToRGB("#9DCDE1"),
+        hexToRGB("#6BB4D2"),
+        hexToRGB("#3498C2"),
+        hexToRGB("#0177A9"),
+        hexToRGB("#065A85"),
+        hexToRGB("#0B4164"),
+        hexToRGB("#0F2B46"),
+        hexToRGB("#0A1C2E")
+      ],
+      [
+        hexToRGB("#EEF9F6"),
+        hexToRGB("#C7E6DE"),
+        hexToRGB("#9DD0C3"),
+        hexToRGB("#6DB9A6"),
+        hexToRGB("#359E84"),
+        hexToRGB("#007E5E"),
+        hexToRGB("#006149"),
+        hexToRGB("#004735"),
+        hexToRGB("#003326"),
+        hexToRGB("#002018")
+      ],
+      [
+        hexToRGB("#fff4da"),
+        hexToRGB("#fbdb94"),
+        hexToRGB("#eebf4b"),
+        hexToRGB("#d6a300"),
+        hexToRGB("#b28801"),
+        hexToRGB("#8b6a08"),
+        hexToRGB("#6c5102"),
+        hexToRGB("#4f3b01"),
+        hexToRGB("#392902"),
+        hexToRGB("#241901")
+      ],
+      [
+        hexToRGB("#FEF4F1"),
+        hexToRGB("#FDD8CC"),
+        hexToRGB("#FBB6A1"),
+        hexToRGB("#F98F6D"),
+        hexToRGB("#EE6231"),
+        hexToRGB("#D03500"),
+        hexToRGB("#A02801"),
+        hexToRGB("#751E03"),
+        hexToRGB("#531806"),
+        hexToRGB("#370F02")
+      ],
+    ]
   }
 ];
