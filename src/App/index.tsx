@@ -179,7 +179,7 @@ export default function App() {
               <option>Segment (Evergreen)</option>
               <option>GitHub (Primer)</option>
               <option>Contentful (Forma 36)</option>
-              <option>DeepL UI</option>
+              <option>DeepL (DeepL UI)</option>
             </Form.Control>
           </Form>
 
